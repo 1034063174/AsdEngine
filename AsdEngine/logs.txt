@@ -1,0 +1,10 @@
+[2024-05-23 16:05:03.311] [multi_sink_logger] [info] This is an info message
+[2024-05-23 16:05:03.311] [multi_sink_logger] [warning] This is a warning message
+[2024-05-23 16:05:03.311] [multi_sink_logger] [error] This is an info message
+[2024-05-23 16:05:03.311] [multi_sink_logger] [debug] This is a warning message
+[2024-05-23 16:05:03.312] [multi_sink_logger] [debug] main.lua:2: unexpected symbol near '<\239>'
+[2024-05-23 16:05:03.312] [multi_sink_logger] [debug] This is a warning message
+[2024-05-23 16:05:03.312] [multi_sink_logger] [debug] This is a warning message 3232 2323 23211 2 
+[2024-05-23 16:05:03.312] [multi_sink_logger] [info] error:
+%s
+

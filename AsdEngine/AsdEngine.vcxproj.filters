@@ -1,0 +1,212 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Source Files">
+      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
+      <Extensions>qml;cpp;c;cc;cxx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    </Filter>
+    <Filter Include="Resource Files">
+      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
+      <Extensions>qrc;rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
+    </Filter>
+    <Filter Include="Form Files">
+      <UniqueIdentifier>{99349809-55BA-4b9d-BF79-8FDBB0286EB3}</UniqueIdentifier>
+      <Extensions>ui</Extensions>
+    </Filter>
+    <Filter Include="Translation Files">
+      <UniqueIdentifier>{639EADAA-A684-42e4-A9AD-28FC9BCB8F7C}</UniqueIdentifier>
+      <Extensions>ts</Extensions>
+    </Filter>
+    <Filter Include="log">
+      <UniqueIdentifier>{edf44334-da0e-4406-add8-0f42ac50c91e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Capstone">
+      <UniqueIdentifier>{364db4ab-463b-4614-a82d-7ba5329b9b3a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Capstone\include">
+      <UniqueIdentifier>{96337ef7-3576-437e-9fa1-16f81ab711eb}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Form Files\Header Files">
+      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
+      <Extensions>h;hh;hpp;hxx;hm;inl;inc;xsd</Extensions>
+    </Filter>
+    <Filter Include="Include">
+      <UniqueIdentifier>{8040d6b9-85a4-4ff1-8986-8949519fcb78}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Include\LuaInclude">
+      <UniqueIdentifier>{d1d94e2a-8b08-4f80-810b-4a44b05d30e7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ETW功能">
+      <UniqueIdentifier>{c8dccef9-d812-4665-b252-bb277df37941}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="外挂练习功能">
+      <UniqueIdentifier>{baa0e27c-a37c-48d0-90d1-db40d7cac814}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="外挂练习功能\各种ui界面的按钮梳理">
+      <UniqueIdentifier>{239b6345-8de7-4e0a-a1bb-cdea61983ded}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="外挂练习功能\各种ui界面的按钮梳理\界面1">
+      <UniqueIdentifier>{9fe268a5-8421-44be-90ad-3e8f73b39fe7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="外挂练习功能\关键字高亮">
+      <UniqueIdentifier>{c49540d8-cf8d-4b35-93db-94e47e83744d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="外挂练习功能\逆向功能">
+      <UniqueIdentifier>{afe84ec5-a449-4797-bf49-61b00755fe65}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="外挂练习功能\其他窗口">
+      <UniqueIdentifier>{72059f23-5c9b-451b-8012-d3792408aff9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="外挂练习功能\其他窗口\表格窗口">
+      <UniqueIdentifier>{06935786-a180-41c1-8da4-5ee3f052a127}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="外挂练习功能\驱动相关">
+      <UniqueIdentifier>{14a026d2-83ba-4502-878f-d239db180490}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="外挂练习功能\Lua">
+      <UniqueIdentifier>{1239be41-9781-4aee-8c20-29b76b5da3d4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ETW功能\读取数据">
+      <UniqueIdentifier>{b6d726d9-17ad-41a2-87cd-b4102083a670}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="comm">
+      <UniqueIdentifier>{1269bab2-80d3-4693-9b54-2f53e29b4158}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="tools">
+      <UniqueIdentifier>{2bc4a4ee-fc2e-4ef8-831b-8fbdeb893ea4}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <QtRcc Include="AsdEngine.qrc">
+      <Filter>Resource Files</Filter>
+    </QtRcc>
+    <QtUic Include="AsdEngine.ui">
+      <Filter>Form Files</Filter>
+    </QtUic>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="main.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Asmtools.cpp">
+      <Filter>Capstone</Filter>
+    </ClCompile>
+    <ClCompile Include="luaClass.cpp">
+      <Filter>外挂练习功能\Lua</Filter>
+    </ClCompile>
+    <ClCompile Include="LogTools.cpp">
+      <Filter>log</Filter>
+    </ClCompile>
+    <ClCompile Include="..\capstone-5.0.1\Mapping.c">
+      <Filter>Capstone\include</Filter>
+    </ClCompile>
+    <ClCompile Include="AsdEngine.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="winTools.cpp">
+      <Filter>外挂练习功能\逆向功能</Filter>
+    </ClCompile>
+    <ClCompile Include="CustomLexerLua.cpp">
+      <Filter>外挂练习功能\关键字高亮</Filter>
+    </ClCompile>
+    <ClCompile Include="ButtonManager.cpp">
+      <Filter>外挂练习功能\各种ui界面的按钮梳理\界面1</Filter>
+    </ClCompile>
+    <ClCompile Include="ButtonHandler.cpp">
+      <Filter>外挂练习功能\各种ui界面的按钮梳理\界面1</Filter>
+    </ClCompile>
+    <ClCompile Include="tablewindow.cpp">
+      <Filter>外挂练习功能\其他窗口\表格窗口</Filter>
+    </ClCompile>
+    <ClCompile Include="tab2.cpp">
+      <Filter>ETW功能\读取数据</Filter>
+    </ClCompile>
+    <ClCompile Include="ReadEtwMsg.cpp">
+      <Filter>ETW功能\读取数据</Filter>
+    </ClCompile>
+    <ClCompile Include="comm\comm.cpp">
+      <Filter>comm</Filter>
+    </ClCompile>
+    <ClCompile Include="tools\GetPdb.cpp">
+      <Filter>tools</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <QtMoc Include="log.h">
+      <Filter>log</Filter>
+    </QtMoc>
+    <QtMoc Include="luaClass.h">
+      <Filter>外挂练习功能\Lua</Filter>
+    </QtMoc>
+    <QtMoc Include="AsdEngine.h">
+      <Filter>Source Files</Filter>
+    </QtMoc>
+    <QtMoc Include="CustomLexerLua.h">
+      <Filter>外挂练习功能\关键字高亮</Filter>
+    </QtMoc>
+    <QtMoc Include="ButtonHandler.h">
+      <Filter>外挂练习功能\各种ui界面的按钮梳理\界面1</Filter>
+    </QtMoc>
+    <QtMoc Include="ButtonManager.h">
+      <Filter>外挂练习功能\各种ui界面的按钮梳理\界面1</Filter>
+    </QtMoc>
+    <QtMoc Include="tablewindow.h">
+      <Filter>外挂练习功能\其他窗口\表格窗口</Filter>
+    </QtMoc>
+    <QtMoc Include="tab2.h">
+      <Filter>ETW功能\读取数据</Filter>
+    </QtMoc>
+    <QtMoc Include="ReadEtwMsg.h">
+      <Filter>ETW功能\读取数据</Filter>
+    </QtMoc>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="Asmtools.h">
+      <Filter>Capstone</Filter>
+    </ClInclude>
+    <ClInclude Include="LogTools.h">
+      <Filter>log</Filter>
+    </ClInclude>
+    <ClInclude Include="luainclude\lauxlib.h">
+      <Filter>Include\LuaInclude</Filter>
+    </ClInclude>
+    <ClInclude Include="luainclude\lua.h">
+      <Filter>Include\LuaInclude</Filter>
+    </ClInclude>
+    <ClInclude Include="luainclude\lualib.h">
+      <Filter>Include\LuaInclude</Filter>
+    </ClInclude>
+    <ClInclude Include="luainclude\luaconf.h">
+      <Filter>Include\LuaInclude</Filter>
+    </ClInclude>
+    <ClInclude Include="..\capstone-5.0.1\Mapping.h">
+      <Filter>Capstone\include</Filter>
+    </ClInclude>
+    <ClInclude Include="winTools.h">
+      <Filter>外挂练习功能\逆向功能</Filter>
+    </ClInclude>
+    <ClInclude Include="驱动相关\hv.h">
+      <Filter>外挂练习功能\驱动相关</Filter>
+    </ClInclude>
+    <ClInclude Include="comm\comm.h">
+      <Filter>comm</Filter>
+    </ClInclude>
+    <ClInclude Include="tools\GetPdb.h">
+      <Filter>tools</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="main.lua" />
+    <None Include="读写例子.lua">
+      <Filter>外挂练习功能\Lua</Filter>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <MASM Include="C:\Users\Public\Nwt\cache\recv\散片\um\hv.asm">
+      <Filter>外挂练习功能\驱动相关</Filter>
+    </MASM>
+  </ItemGroup>
+  <ItemGroup>
+    <Text Include="编译方法.txt" />
+  </ItemGroup>
+</Project>

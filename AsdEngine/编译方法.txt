@@ -1,0 +1,3 @@
+windeployqt E:\temp\AsdEngine.exe
+
+记得把AsdEngine.exe单独拖出去编译
