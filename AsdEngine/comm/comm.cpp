@@ -32,3 +32,11 @@ BOOLEAN DriverComm(ULONG ulCmd, PVOID pInData, int nLen)
 	}
 	return 0;
 }
+
+
+
+
+BOOLEAN ASD_test()
+{
+	return DriverComm(ASD_TEST, 0, 0);
+}

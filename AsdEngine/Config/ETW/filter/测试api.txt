@@ -1,0 +1,2 @@
+NtQueryVirtualMemory
+NtReadVirtualMemory

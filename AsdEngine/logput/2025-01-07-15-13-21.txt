@@ -1,0 +1,22 @@
+[2025-01-07 15:13:21.748] [async_logger] [debug] 目录已存在:  "E:/VS项目/AsdEngine/AsdEngine/Config"
+[2025-01-07 15:13:22.780] [async_logger] [debug] "123123"
+[2025-01-07 15:13:24.396] [async_logger] [debug] "规则就是用来打破的"
+[2025-01-07 15:13:25.539] [async_logger] [debug] 错误
+[2025-01-07 15:13:25.540] [async_logger] [debug] "123123"
+[2025-01-07 15:13:28.996] [async_logger] [debug] 错误
+[2025-01-07 15:13:28.996] [async_logger] [debug] "123123"
+[2025-01-07 15:13:30.797] [async_logger] [debug] "规则就是用来打破的"
+[2025-01-07 15:13:32.540] [async_logger] [debug] 错误
+[2025-01-07 15:13:32.540] [async_logger] [debug] "123123"
+[2025-01-07 15:13:34.251] [async_logger] [debug] 错误
+[2025-01-07 15:13:34.252] [async_logger] [debug] "123123"
+[2025-01-07 15:13:34.963] [async_logger] [debug] 错误
+[2025-01-07 15:13:34.963] [async_logger] [debug] "123123"
+[2025-01-07 15:13:35.619] [async_logger] [debug] 错误
+[2025-01-07 15:13:35.619] [async_logger] [debug] "123123"
+[2025-01-07 15:13:36.667] [async_logger] [debug] 错误
+[2025-01-07 15:13:36.667] [async_logger] [debug] "123123"
+[2025-01-07 15:13:38.891] [async_logger] [debug] 错误
+[2025-01-07 15:13:38.891] [async_logger] [debug] "123123"
+[2025-01-07 15:13:40.107] [async_logger] [debug] 错误
+[2025-01-07 15:13:40.107] [async_logger] [debug] "123123"

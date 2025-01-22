@@ -1,6 +1,6 @@
 #pragma once
-#include <refs.hpp>
-#include <etwhook_base.hpp>
+#include "refs.hpp"
+#include "etwhook_base.hpp"
 #include "etwhook_init.hpp"
 class EtwHookManager  : public EtwBase
 {

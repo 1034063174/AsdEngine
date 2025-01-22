@@ -75,6 +75,9 @@
     <Filter Include="tools">
       <UniqueIdentifier>{2bc4a4ee-fc2e-4ef8-831b-8fbdeb893ea4}</UniqueIdentifier>
     </Filter>
+    <Filter Include="ETW功能\过滤界面">
+      <UniqueIdentifier>{f86bd972-3ee6-4957-a09d-0c67e68d9fa2}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <QtRcc Include="AsdEngine.qrc">
@@ -130,6 +133,12 @@
     <ClCompile Include="tools\GetPdb.cpp">
       <Filter>tools</Filter>
     </ClCompile>
+    <ClCompile Include="filterdialog.cpp">
+      <Filter>ETW功能\过滤界面</Filter>
+    </ClCompile>
+    <ClCompile Include="mycomboBox.cpp">
+      <Filter>ETW功能\读取数据</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <QtMoc Include="log.h">
@@ -157,6 +166,15 @@
       <Filter>ETW功能\读取数据</Filter>
     </QtMoc>
     <QtMoc Include="ReadEtwMsg.h">
+      <Filter>ETW功能\读取数据</Filter>
+    </QtMoc>
+    <QtMoc Include="filterdialog.h">
+      <Filter>ETW功能\过滤界面</Filter>
+    </QtMoc>
+    <QtMoc Include="InputDialog.h">
+      <Filter>ETW功能\过滤界面</Filter>
+    </QtMoc>
+    <QtMoc Include="mycomboBox.h">
       <Filter>ETW功能\读取数据</Filter>
     </QtMoc>
   </ItemGroup>
@@ -208,5 +226,10 @@
   </ItemGroup>
   <ItemGroup>
     <Text Include="编译方法.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <QtUic Include="UI_filter.ui">
+      <Filter>Form Files</Filter>
+    </QtUic>
   </ItemGroup>
 </Project>

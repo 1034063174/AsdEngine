@@ -1,0 +1,2 @@
+首先第一行必须是关键字,INCLUDE表示包含,EXCLUDE表示不包含,ALL表示所有。
+后面写api名字，注意是内核api。比如ReadProcessMemory内核层调用了NtReadVirtualMemory

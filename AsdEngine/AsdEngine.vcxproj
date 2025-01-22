@@ -92,6 +92,7 @@
       <AdditionalIncludeDirectories>$(ProjectDir)QScintilla_gpl-2.11.2\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <LanguageStandard>stdcpp17</LanguageStandard>
       <PreprocessorDefinitions>QSCINTILLA_DLL;NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <Optimization>Disabled</Optimization>
     </ClCompile>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x64'" Label="Configuration">
@@ -132,6 +133,8 @@
     <ClCompile Include="ButtonManager.cpp" />
     <ClCompile Include="comm\comm.cpp" />
     <ClCompile Include="CustomLexerLua.cpp" />
+    <ClCompile Include="filterdialog.cpp" />
+    <ClCompile Include="mycomboBox.cpp" />
     <ClCompile Include="ReadEtwMsg.cpp">
       <DynamicSource Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">input</DynamicSource>
       <QtMocFileName Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">%(Filename).moc</QtMocFileName>
@@ -155,6 +158,7 @@
     <ClCompile Include="LogTools.cpp" />
     <ClCompile Include="luaClass.cpp" />
     <ClCompile Include="main.cpp" />
+    <QtUic Include="UI_filter.ui" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\capstone-5.0.1\Mapping.h" />
@@ -163,6 +167,9 @@
     <QtMoc Include="tab2.h" />
     <ClInclude Include="comm\comm.h" />
     <QtMoc Include="ReadEtwMsg.h" />
+    <QtMoc Include="filterdialog.h" />
+    <QtMoc Include="InputDialog.h" />
+    <QtMoc Include="mycomboBox.h" />
     <ClInclude Include="tools\GetPdb.h" />
     <ClInclude Include="驱动相关\hv.h" />
     <QtMoc Include="CustomLexerLua.h" />

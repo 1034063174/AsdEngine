@@ -1,7 +1,7 @@
 #pragma once
 #ifndef _ETWHOOK_BASE_
 #define _ETWHOOK_BASE_
-#include <refs.hpp>
+#include "refs.hpp"
 
 template <POOL_TYPE pool_type,ULONG pool_tag>
 class _EtwBase {

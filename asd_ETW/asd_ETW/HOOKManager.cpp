@@ -1,4 +1,4 @@
-#include <etwhook_manager.hpp>
+#include "etwhook_manager.hpp"
 #include <intrin.h>
 #include "ksystem_info.hpp"
 #include"Utils/MacroHelper.h"
@@ -8,6 +8,10 @@
 EtwHookManager* EtwHookManager::__instance;
 
 void(*EtwHookManager::__orghalcollectpmccounters)(void*, unsigned long long);
+
+extern BreakPointData  g_BreakPointData ;
+extern BreakPointMessage  g_BreakPointMessage;
+extern    KEVENT     g_APC_Event;
 
 EtwHookManager* EtwHookManager::get_instance()
 {
@@ -246,7 +250,75 @@ void CommFunction(ULONG64 arg1, ULONG64 arg2, ULONG64 arg3, ULONG64 arg4)
 */
 extern PVOID g_kernelModeAddress1;
 ULONG64 MaxSize = ((10 * 1024 * 1024) / (sizeof(SyscallData) + 0x10)) - 1;//0x10 是容错
+extern  KEVENT g_Event;
+extern ULONG64* pulStackTrace;
+// KAPC environment enumeration
+typedef enum _KAPC_ENVIRONMENT {
+	OriginalApcEnvironment,
+	AttachedApcEnvironment,
+	CurrentApcEnvironment,
+	InsertApcEnvironment
+} KAPC_ENVIRONMENT;
 
+// APC routine function prototypes
+typedef VOID(*PKNORMAL_ROUTINE) (
+	IN PVOID pNormalContext,
+	IN PVOID pSystemArgument1,
+	IN PVOID pSystemArgument2
+	);
+
+typedef VOID(*PKKERNEL_ROUTINE) (
+	IN struct _KAPC* pApc,
+	IN OUT PKNORMAL_ROUTINE* pNormalRoutine,
+	IN OUT PVOID* pNormalContext,
+	IN OUT PVOID* pSystemArgument1,
+	IN OUT PVOID* pSystemArgument2
+	);
+
+typedef VOID(*PKRUNDOWN_ROUTINE) (
+	IN struct _KAPC* pApc
+	);
+
+// Function prototypes for APC initialization and insertion
+ EXTERN_C VOID KeInitializeApc(
+	__out PRKAPC pApc,
+	__in PRKTHREAD pThread,
+	__in KAPC_ENVIRONMENT eEnvironment,
+	__in PKKERNEL_ROUTINE pKernelRoutine,
+	__in_opt PKRUNDOWN_ROUTINE pRundownRoutine,
+	__in_opt PKNORMAL_ROUTINE pNormalRoutine,
+	__in_opt KPROCESSOR_MODE eApcMode,
+	__in_opt PVOID pNormalContext
+);
+
+ EXTERN_C BOOLEAN KeInsertQueueApc(
+	__inout PRKAPC pApc,
+	__in_opt PVOID pSystemArgument1,
+	__in_opt PVOID pSystemArgument2,
+	__in KPRIORITY nIncrement
+);
+
+
+VOID NormalRoutineFunc(
+	IN struct _KAPC* pApc,
+	IN OUT PKNORMAL_ROUTINE* pNormalRoutine,
+	IN OUT PVOID* pNormalContext,
+	IN OUT PVOID* pSystemArgument1,
+	IN OUT PVOID* pSystemArgument2
+)
+{
+	UNREFERENCED_PARAMETER(pNormalContext);
+	UNREFERENCED_PARAMETER(pSystemArgument2);
+	UNREFERENCED_PARAMETER(pNormalRoutine);
+	UNREFERENCED_PARAMETER(pApc);
+
+	PKEVENT overevent = (PKEVENT)*pSystemArgument1;
+	ULONG	ulCapturedFrames = RtlWalkFrameChain((PVOID*)pulStackTrace, 20, UserMode);
+	UNREFERENCED_PARAMETER(ulCapturedFrames);
+	KeSetEvent(overevent, 0, 0);
+;
+
+}
 void EtwHookManager::record_syscall(void** call_routine)
 {
 	//[todo]多核心情况下 存在多个核心同时调用一个api 会漏包，
@@ -286,11 +358,64 @@ void EtwHookManager::record_syscall(void** call_routine)
 		temp->r8 = *((ULONG64*)SystemCallFunction - 2);
 		temp->rdx = *((ULONG64*)SystemCallFunction - 3);
 		temp->rcx = *((ULONG64*)SystemCallFunction - 4);
+		RtlZeroMemory(temp->Name, 0x20);
 		memcpy(temp->Name, ProcessName, strlen(ProcessName));
 		temp->Pid = (ULONG64)PsGetCurrentProcessId();
 		temp->ticktack = ticktack++;       //写id记得放最后，避免先写id直接被R3读取了；
 //ticktack放这里能减缓漏包，但是还会漏
 		UNREFERENCED_PARAMETER(call_routine);
+		do
+		{
+			if ((g_BreakPointData.Pid == temp->Pid) &&
+				(g_BreakPointData.Address == temp->OrgSyscall))
+			{
+				if (g_BreakPointData.UseR8)
+					if (temp->r8 != g_BreakPointData.R8)
+						break;
+				if (g_BreakPointData.UseR9)
+					if (temp->r9 != g_BreakPointData.R9)
+						break;
+				if (g_BreakPointData.UseRCX)
+					if (temp->rcx != g_BreakPointData.RCX)
+						break;
+				if (g_BreakPointData.UseRDX)
+					if (temp->rdx != g_BreakPointData.RDX)
+						break;
+				g_BreakPointMessage.R8 = temp->r8;
+				g_BreakPointMessage.R9 = temp->r9;
+				g_BreakPointMessage.RCX = temp->rcx;
+				g_BreakPointMessage.RDX = temp->rdx;
+				if (MmIsAddressValid((PVOID)temp->r8))
+					g_BreakPointMessage.R8DATA =  *(ULONG64*)temp->r8;
+				if (MmIsAddressValid((PVOID)temp->r9))
+					g_BreakPointMessage.R9DATA = *(ULONG64*)temp->r9;
+				if (MmIsAddressValid((PVOID)temp->rcx))
+					g_BreakPointMessage.RCXDATA = *(ULONG64*)temp->rcx;
+				if (MmIsAddressValid((PVOID)temp->rdx))
+					g_BreakPointMessage.RDXDATA = *(ULONG64*)temp->rdx;
+	
+				
+				//irql>=2时无法调用RtlWalkFrameChain
+				//所以只能用apc调用，但是当irql=2时又不能执行应用层apc
+				//目前的方式时先在irql=2时设置apc，当进程执行完毕后回到应用层时获取调用堆栈。
+				//那么目前我们就能获取到 
+
+				static PKAPC pApcusers = NULL;
+				if (pApcusers == NULL)
+					pApcusers = (PKAPC)ExAllocatePool(NonPagedPool, sizeof(KAPC)*10);
+				static ULONG64 tack = 0;
+				tack++;
+				PKAPC pApcuser = &pApcusers[tack % 10];
+				KeInitializeApc(pApcuser, KeGetCurrentThread(), OriginalApcEnvironment, NormalRoutineFunc, NULL, NULL, UserMode, (PVOID)NULL);
+				KeInsertQueueApc(pApcuser, &g_APC_Event, 0, 2);
+;
+
+				KeWaitForSingleObject(&g_Event, WrExecutive, 0, 0, 0);
+			}
+		} while (0);
+
+		
+	
 		//auto hk_map = __hookmaps.find({ call_routine[9],nullptr });
 
 		//if (!hk_map) return;

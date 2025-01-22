@@ -1,19 +1,15 @@
 #include <ntifs.h>
+#include <vcruntime.h>
 #include <exception>
 #include "MacroHelper.h"
-#include <cstddef>
-#include <utility>
-#include <type_traits>
-#include <immintrin.h>
-#include "MemoryUtils.h"
 
 #pragma optimize("", off)
-using _PVFV = void (__cdecl *)(void); // PVFV = Pointer to Void Func(Void)
-using _PIFV = int  (__cdecl *)(void); // PIFV = Pointer to Int Func(Void)
+using _PVFV = void(__cdecl*)(void); // PVFV = Pointer to Void Func(Void)
+using _PIFV = int(__cdecl*)(void); // PIFV = Pointer to Int Func(Void)
 
 constexpr int max_destructors_count = 64;
 static _PVFV onexitarray[max_destructors_count] = {};
-static _PVFV *onexitbegin = nullptr, *onexitend = nullptr;
+static _PVFV* onexitbegin = nullptr, * onexitend = nullptr;
 
 // C initializers:
 #pragma section(".CRT$XIA", long, read)
@@ -55,7 +51,7 @@ extern "C" int __cdecl __init_on_exit_array()
 extern "C" int __cdecl atexit(_PVFV fn)
 {
     // ToDo: replace with dynamically allocated list of destructors!
-    if (onexitend > &onexitarray[max_destructors_count - 1]) 
+    if (onexitend > &onexitarray[max_destructors_count - 1])
         return 1; // Not enough space
     *onexitend = fn;
     onexitend++;
@@ -68,7 +64,7 @@ int __cdecl _purecall()
     __debugbreak();
     return 0;
 }
- 
+
 static void execute_pvfv_array(_PVFV* begin, _PVFV* end)
 {
     _PVFV* fn = begin;
@@ -138,7 +134,7 @@ void* __cdecl operator new(size_t Size)
     }
     return Pointer;
 }
- 
+
 _NODISCARD _Ret_notnull_ _Post_writable_byte_size_(_Size) _VCRT_ALLOCATOR
 void* __cdecl operator new(size_t Size, POOL_TYPE PoolType)
 {
@@ -152,7 +148,7 @@ void* __cdecl operator new(size_t Size, POOL_TYPE PoolType)
 }
 
 _NODISCARD _Ret_notnull_ _Post_writable_byte_size_(_Size) _VCRT_ALLOCATOR
-void* __cdecl (size_t Size)
+void* __cdecl operator new[](size_t Size)
 {
     void* Pointer = nullptr;
 
@@ -161,10 +157,10 @@ void* __cdecl (size_t Size)
         Pointer = ExAllocatePoolWithTag(NonPagedPool, Size, CrtPoolTag);
         if (Pointer) ZM(Pointer, Size);
     }
-    
+
     return Pointer;
 }
- 
+
 _NODISCARD _Ret_notnull_ _Post_writable_byte_size_(_Size) _VCRT_ALLOCATOR
 void* __cdecl operator new[](size_t Size, POOL_TYPE PoolType)
 {
@@ -175,16 +171,16 @@ void* __cdecl operator new[](size_t Size, POOL_TYPE PoolType)
         Pointer = ExAllocatePoolWithTag(PoolType, Size, CrtPoolTag);
         if (Pointer) ZM(Pointer, Size);
     }
-    
+
     return Pointer;
 }
- 
+
 void __cdecl operator delete(void* Pointer)
 {
     if (!Pointer) return;
     ExFreePoolWithTag(Pointer, CrtPoolTag);
 }
- 
+
 void __cdecl operator delete(void* Pointer, size_t Size)
 {
     UNREFERENCED_PARAMETER(Size);
@@ -226,31 +222,31 @@ namespace std
     {
         RaiseException(INSTALL_MORE_MEMORY);
     }
-    
+
     [[noreturn]]
     void __cdecl _Xinvalid_argument(_In_z_ const char*)
     {
         RaiseException(DRIVER_INVALID_CRUNTIME_PARAMETER);
     }
-    
+
     [[noreturn]]
     void __cdecl _Xlength_error(_In_z_ const char*)
     {
         RaiseException(KMODE_EXCEPTION_NOT_HANDLED);
     }
-    
+
     [[noreturn]]
     void __cdecl _Xout_of_range(_In_z_ const char*)
     {
         RaiseException(DRIVER_OVERRAN_STACK_BUFFER);
     }
-    
+
     [[noreturn]]
     void __cdecl _Xoverflow_error(_In_z_ const char*)
     {
         RaiseException(DRIVER_OVERRAN_STACK_BUFFER);
     }
-   
+
     [[noreturn]]
     void __cdecl _Xruntime_error(_In_z_ const char*)
     {
@@ -285,19 +281,19 @@ void __cdecl _invoke_watson(
 
 // For <unordered_set> and <unordered_map> support:
 #ifdef _AMD64_
-    #pragma function(ceilf)
-    _Check_return_ float __cdecl ceilf(_In_ float _X)
-    {
-        int v = static_cast<int>(_X);
-        return static_cast<float>(_X > static_cast<float>(v) ? v + 1 : v);
-    }
+#pragma function(ceilf)
+_Check_return_ float __cdecl ceilf(_In_ float _X)
+{
+    int v = static_cast<int>(_X);
+    return static_cast<float>(_X > static_cast<float>(v) ? v + 1 : v);
+}
 #else
-    #pragma function(ceil)
-    _Check_return_ double __cdecl ceil(_In_ double _X)
-    {
-        int v = static_cast<int>(_X);
-        return static_cast<double>(_X > static_cast<double>(v) ? v + 1 : v);
-    }
+#pragma function(ceil)
+_Check_return_ double __cdecl ceil(_In_ double _X)
+{
+    int v = static_cast<int>(_X);
+    return static_cast<double>(_X > static_cast<double>(v) ? v + 1 : v);
+}
 #endif
 
 #pragma optimize("", on) // ª÷∏¥”≈ªØ

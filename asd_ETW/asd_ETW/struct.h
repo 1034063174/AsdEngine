@@ -15,23 +15,14 @@ typedef enum _ASD_CMD
 {
 	ASD_TEST,
 	ASD_START_ETW = 1,
-	//ASD_GET_MODULE = 1 ,
-	//ASD_READ_MEMORY  =2 ,
-	//ASD_WRITE_MEMORY = 3,
-	//ASD_QUERY_MEMORY = 4,
-	//ASD_FORCE_FILE = 5 ,
-	//ASD_GET_ALL_MODULE = 6,
-	//ASD_GET_ALL_CallBack = 7,
-	//ASD_INIT_API_FUNC = 8,
-	//ASD_INIT_STRUCT = 9,
-	//ASD_CHANGE_HANDLE_GRANTEDACCESS = 10,
-	//ASD_USER_PROTECT_PROCESS =11,
-	//ASD_KERNEL_PROTECT_PROCESS =12,
-	//ASD_ATTACH_READ_MEMORY = 13,
-
+	ASD_SET_BREAK_POINT = 2,
+	ASD_DELETE_BREAK_POINT = 3,
+	ASD_RUN_BREAK_POINT = 4,
+	ASD_GET_BREAK_POINT_MESSAGE = 5,
+	ASD_GET_ALL_MODULE = 6,
 }ASD_CMD;
 
-typedef struct _CommStruct  //查询模块
+typedef struct _CommStruct  
 {
 	HANDLE  hPID;
 	ULONG64  ret;
@@ -48,5 +39,36 @@ typedef struct _SyscallData
 	ULONG64 rdx = 0;
 	ULONG64 rcx = 0;
 	char Name[0x20] = { 0 };
-
 }SyscallData, * PSyscallData;
+
+typedef struct _BreakPointData
+{
+	ULONG64	Pid;
+	ULONG64	Address;
+	ULONG64 R9;
+	ULONG64 R8;
+	ULONG64 RDX;
+	ULONG64 RCX;
+	BOOLEAN UseR8;
+	BOOLEAN UseR9;
+	BOOLEAN UseRDX;
+	BOOLEAN UseRCX;
+}BreakPointData, * PBreakPointData;
+
+typedef struct _BreakPointMessage
+{
+	ULONG64 R9;
+	ULONG64 R8;
+	ULONG64 RDX;
+	ULONG64 RCX;
+	ULONG64 R9DATA;
+	ULONG64 R8DATA;
+	ULONG64 RDXDATA;
+	ULONG64 RCXDATA;
+}BreakPointMessage, * PBreakPointMessage;
+
+//typedef struct _GET_ALL_MODULE_INFO   //查询内存信息
+//{
+//	HANDLE  ullPID;
+//	ULONG64  ullBufferAddress;
+//}GET_ALL_MODULE_INFO, * PGET_ALL_MODULE_INFO;

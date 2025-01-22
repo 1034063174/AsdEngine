@@ -1,10 +1,11 @@
 #include <ntifs.h>
 #include "Utils/CppSupport.h"
 #include "etwhook_init.hpp"
-#include <etwhook_manager.hpp>
+#include "etwhook_manager.hpp"
 #include"Utils/MacroHelper.h"
 #include <wdm.h>
 #include"comm/IoComm.h"
+
 #define SHARED_MEMORY_NAME L"\\BaseNamedObjects\\SharedMemory"  // 共享内存名称
 
 void* g_section_object;
@@ -16,7 +17,12 @@ PVOID g_kernelModeAddress = NULL;  // 内核内存指针
 PMDL g_Mdl = NULL; // MDL 全局变量
 HANDLE last_handle = 0;  // 共享内存指针
 
-
+ULONG64* pulStackTrace;
+BreakPointData  g_BreakPointData = { 0 };
+BreakPointMessage g_BreakPointMessage = { 0 };
+BOOLEAN g_Run = FALSE;
+KEVENT g_Event;
+KEVENT g_APC_Event;
 HANDLE ReopenSharedMemorySection()
 {
 
@@ -239,7 +245,52 @@ NTSTATUS Dispatch(PCommPackage pPackage)
         st = startETW(pinfo->hPID);
         pinfo->ret = (ULONG64)g_SharedMemory;
     }
+    break;
+    case  ASD_SET_BREAK_POINT:
+    {
+   
+        PBreakPointData pinfo = (PBreakPointData)pPackage->ullInData;
+        memcpy(&g_BreakPointData, pinfo, sizeof(BreakPointData));
+        KeInitializeEvent(&g_Event, SynchronizationEvent, FALSE);
+        st = STATUS_SUCCESS;
 
+    }
+    break;
+    case  ASD_DELETE_BREAK_POINT:
+    {
+        KeSetEvent(&g_Event, 0, 0);
+        RtlZeroMemory(&g_BreakPointData, sizeof(BreakPointData));
+        st = STATUS_SUCCESS;
+    }
+    break;
+    case  ASD_RUN_BREAK_POINT: //这里读取的是 堆栈信息
+    {
+
+        ULONG64* pinfo = (PULONG64)pPackage->ullInData;
+        LARGE_INTEGER  Timeout;
+	    Timeout.QuadPart = -100000;// 10000*100ns
+        KeSetEvent(&g_Event, 0, 0);
+        KeInitializeEvent(&g_APC_Event, SynchronizationEvent, FALSE);
+        KeWaitForSingleObject(&g_APC_Event, WrExecutive, KernelMode, FALSE, &Timeout);
+
+        if(pulStackTrace)
+           memcpy(pinfo, pulStackTrace, 0x100);
+        st = STATUS_SUCCESS;
+    }
+    break;
+    case  ASD_GET_BREAK_POINT_MESSAGE: //这里读取的是寄存器
+    {
+    
+        PBreakPointMessage pinfo = (PBreakPointMessage)pPackage->ullInData;
+        memcpy(pinfo, &g_BreakPointMessage, sizeof(BreakPointData));
+        st = STATUS_SUCCESS;
+    }
+    break;
+   /* case  ASD_GET_ALL_MODULE:
+    {
+        PGET_ALL_MODULE_INFO pinfo = (PGET_ALL_MODULE_INFO)pPackage->ullInData;
+        st = ASD_GetAllModule(pinfo->ullPID, pinfo->ullBufferAddress);
+    }break;*/
     default:
         break;
     }
@@ -274,6 +325,7 @@ static NTSTATUS DriverUnload(_In_ PDRIVER_OBJECT DriverObject)
 
 EXTERN_C NTSTATUS DriverEntry( PDRIVER_OBJECT DriverObject, PUNICODE_STRING RegistryPath)
 {
+    pulStackTrace = (ULONG64*)ExAllocatePool(NonPagedPool, 0x1000);
     NTSTATUS status = STATUS_SUCCESS;
 	UNREFERENCED_PARAMETER( RegistryPath);
 	DriverObject->DriverUnload = reinterpret_cast<PDRIVER_UNLOAD>(DriverUnload);
